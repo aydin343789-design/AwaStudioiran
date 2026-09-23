@@ -1,0 +1,6 @@
+{
+  "name": "AwaStudio TTS Pro - تبدیل متن به صدا",
+  "description": "اپلیکیشن پیشرفته تبدیل متن به صوت برای زبان‌های فارسی و انگلیسی با دقت تلفظ بالا، تنظیم لحن و سرعت، ذخیره‌سازی WAV و MP3، کارکرد آفلاین و آماده‌سازی برای ساخت APK",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
