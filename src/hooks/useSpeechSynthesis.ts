@@ -91,20 +91,26 @@ export function useSpeechSynthesis() {
         });
 
         if (response.ok) {
-          audioBlob = await response.blob();
-          audioFormat = 'mp3';
+          const blob = await response.blob();
+          if (blob && blob.size > 200) {
+            audioBlob = blob;
+            audioFormat = 'mp3';
 
-          // Try to decode audio to get exact duration
-          try {
-            const arrayBuf = await audioBlob.arrayBuffer();
-            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const decoded = await audioCtx.decodeAudioData(arrayBuf.slice(0));
-            if (decoded && decoded.duration) {
-              durationSec = Math.max(1, Math.round(decoded.duration));
+            // Try to decode audio to get exact duration
+            try {
+              const arrayBuf = await audioBlob.arrayBuffer();
+              const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+              if (AudioContextClass) {
+                const audioCtx = new AudioContextClass();
+                const decoded = await audioCtx.decodeAudioData(arrayBuf.slice(0));
+                if (decoded && decoded.duration && isFinite(decoded.duration)) {
+                  durationSec = Math.max(1, Math.round(decoded.duration));
+                }
+                audioCtx.close().catch(() => {});
+              }
+            } catch (e) {
+              // fallback to estimated duration
             }
-            audioCtx.close();
-          } catch (e) {
-            // fallback to estimated duration
           }
         }
       } catch (networkErr) {
@@ -117,8 +123,8 @@ export function useSpeechSynthesis() {
         audioBlob = await synthesizeOfflineAudioTrack(
           phoneticallyEnhanced,
           durationSec,
-          character === 'child' ? 1.35 : character === 'male' ? 0.88 : 1.05,
-          emotion === 'angry' ? 1.15 : emotion === 'sad' ? 0.85 : 1.0,
+          character === 'child' ? 1.42 : character === 'male' ? 0.86 : 1.05,
+          emotion === 'angry' ? 1.22 : emotion === 'sad' ? 0.74 : emotion === 'happy' ? 1.16 : 1.08,
           lang,
           character,
           emotion
@@ -149,7 +155,7 @@ export function useSpeechSynthesis() {
         character,
         emotion,
         voiceName: `${characterLabels[character]} • ${lang === 'fa' ? 'فارسی' : 'English'}`,
-        format: audioFormat === 'mp3' ? ('wav' as any) : 'wav', // compatible with item format
+        format: audioFormat,
         fileSizeBytes: audioBlob.size,
       };
 

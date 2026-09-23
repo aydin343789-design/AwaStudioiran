@@ -21,32 +21,59 @@ export const CharacterToneSelector: React.FC<CharacterToneSelectorProps> = ({
     { id: 'child', label: 'کودک', icon: '🧒', desc: 'صدای شاداب و جوان' },
   ];
 
-  const emotions: { id: EmotionType; label: string; icon: React.ReactNode; desc: string }[] = [
+  const emotions: {
+    id: EmotionType;
+    label: string;
+    icon: React.ReactNode;
+    desc: string;
+    rateText: string;
+    pitchText: string;
+    volumeText: string;
+    acousticProfile: string;
+  }[] = [
     {
       id: 'happy',
       label: 'شاد و صمیمی',
       icon: <Smile className="w-4 h-4 text-amber-400" />,
-      desc: 'پرانرژی، گرم و دوستانه',
+      desc: 'پرانرژی و سرزنده',
+      rateText: '+۱۶٪ سریع‌تر',
+      pitchText: '+۱۸٪ گام زیرتر',
+      volumeText: '+۱۶٪ رسا',
+      acousticProfile: 'گام زیر و باطراوت، ریتم صعودی پرنشاط با ضرب‌آهنگ شاد',
     },
     {
       id: 'sad',
-      label: 'غمگین و ناراحت',
+      label: 'غمگین و محزون',
       icon: <Frown className="w-4 h-4 text-blue-400" />,
-      desc: 'شمرده، آرام و حزن‌انگیز',
+      desc: 'آهسته، آرام و حزن‌انگیز',
+      rateText: '-۲۶٪ بسیار آهسته',
+      pitchText: '-۱۸٪ گام بم‌تر',
+      volumeText: '-۲۲٪ نجوایی و ملایم',
+      acousticProfile: 'گام بم و افتاده، ادای کشیده کلمات با مکث‌های عمیق احساسی',
     },
     {
       id: 'angry',
       label: 'خشمگین و عصبانی',
       icon: <Flame className="w-4 h-4 text-rose-500" />,
-      desc: 'قاطع، تند و هیجانی',
+      desc: 'تند، کوبنده و تحکمی',
+      rateText: '+۲۲٪ شتابان',
+      pitchText: '+۱۶٪ گام پرفشار',
+      volumeText: '+۳۲٪ بسیار بلند',
+      acousticProfile: 'حجم صدای پرطنین، ریتم سریع و منقطع با تکیه کلام‌های ضربه‌ای',
     },
     {
       id: 'commercial',
       label: 'تبلیغاتی و رسا',
       icon: <Megaphone className="w-4 h-4 text-emerald-400" />,
-      desc: 'واضح، ترغیب‌کننده و رسمی',
+      desc: 'گویندگی تیزر و رسمی',
+      rateText: '+۸٪ منظم و استودیویی',
+      pitchText: '+۶٪ شفاف',
+      volumeText: '+۲۰٪ پروضوح',
+      acousticProfile: 'بیان شفاف و ترغیب‌کننده با تفکیک دقیق هجاها و مکث‌های دراماتیک',
     },
   ];
+
+  const currentEmotionConfig = emotions.find((e) => e.id === emotion) || emotions[0];
 
   return (
     <div className="flex flex-col gap-3.5 bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg">
@@ -125,6 +152,31 @@ export const CharacterToneSelector: React.FC<CharacterToneSelectorProps> = ({
               </button>
             );
           })}
+        </div>
+
+        {/* Active Acoustic Profile Banner */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-2.5 rounded-xl bg-indigo-950/40 border border-indigo-900/60 mt-1">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-md bg-indigo-600/30 text-indigo-300 font-bold text-[11px]">
+              ⚡
+            </span>
+            <span className="text-slate-300 text-[11px] leading-relaxed">
+              <strong className="text-indigo-300 font-medium">پروفایل صوتی فعال: </strong>
+              {currentEmotionConfig.acousticProfile}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 self-end sm:self-auto shrink-0 text-[10px] font-mono">
+            <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-amber-300" title="سرعت گویش">
+              {currentEmotionConfig.rateText}
+            </span>
+            <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-indigo-300" title="گام صدا">
+              {currentEmotionConfig.pitchText}
+            </span>
+            <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-emerald-300" title="بلندی و رسایی صدا">
+              {currentEmotionConfig.volumeText}
+            </span>
+          </div>
         </div>
       </div>
     </div>

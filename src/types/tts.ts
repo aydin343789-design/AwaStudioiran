@@ -42,6 +42,6 @@ export interface AudioRecordItem {
   character: CharacterType;
   emotion: EmotionType;
   voiceName: string;
-  format: 'wav';
+  format: 'wav' | 'mp3';
   fileSizeBytes: number;
 }

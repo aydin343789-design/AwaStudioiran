@@ -77,8 +77,12 @@ export const AudioWaveform: React.FC<AudioWaveformProps> = ({
 
         // Draw rounded bar
         ctx.beginPath();
-        const radius = barWidth / 2;
-        ctx.roundRect(x, y, barWidth, barHeight, radius);
+        const radius = Math.min(barWidth / 2, barHeight / 2);
+        if (typeof (ctx as any).roundRect === 'function') {
+          (ctx as any).roundRect(x, y, barWidth, barHeight, radius);
+        } else {
+          ctx.rect(x, y, barWidth, barHeight);
+        }
         ctx.fill();
 
         // Glow indicator on current playback bar

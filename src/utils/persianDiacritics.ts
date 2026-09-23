@@ -1,7 +1,7 @@
 /**
  * Persian linguistic and phonetic preprocessing toolkit for TTS precision
  */
-import { applyPronunciationDictionary } from './persianPronunciationDict';
+import { applyPronunciationDictionary } from './persianPronunciationDict.ts';
 
 // Convert Persian and English digits to Persian words (0 to billions)
 const ones = ['', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'شش', 'هفت', 'هشت', 'نه'];

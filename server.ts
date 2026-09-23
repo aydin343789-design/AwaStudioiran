@@ -10,6 +10,114 @@ import { autoEnhancePersianPhonetics } from './src/utils/persianDiacritics.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function computeEmotionalProsody(
+  character: string,
+  emotion: string,
+  lang: string
+): { voiceName: string; pitch: string; rate: string; volume: string } {
+  let voiceName = 'fa-IR-DilaraNeural';
+  if (lang === 'fa') {
+    if (character === 'male') {
+      voiceName = 'fa-IR-FaridNeural';
+    } else {
+      voiceName = 'fa-IR-DilaraNeural';
+    }
+  } else {
+    if (character === 'male') {
+      voiceName = 'en-US-GuyNeural';
+    } else if (character === 'child') {
+      voiceName = 'en-US-AnaNeural';
+    } else {
+      voiceName = 'en-US-JennyNeural';
+    }
+  }
+
+  // Base character offsets
+  let pitchOffset = 0;
+  let rateOffset = 0;
+  let volumeOffset = 0;
+
+  if (character === 'child') {
+    if (lang === 'fa') {
+      pitchOffset = 42; // Transmute into an authentic sweet child voice
+      rateOffset = 8;
+      volumeOffset = 6;
+    }
+  } else if (character === 'male') {
+    pitchOffset = -5; // Richer baritone resonance
+    volumeOffset = 4;
+  }
+
+  // Emotional modulation deltas (noticeable and expressive)
+  let pitchDelta = 0;
+  let rateDelta = 0;
+  let volumeDelta = 0;
+
+  switch (emotion) {
+    case 'happy':
+      pitchDelta = +18;
+      rateDelta = +16;
+      volumeDelta = +16;
+      break;
+    case 'sad':
+      pitchDelta = -18;
+      rateDelta = -26;
+      volumeDelta = -22;
+      break;
+    case 'angry':
+      pitchDelta = +16;
+      rateDelta = +22;
+      volumeDelta = +32;
+      break;
+    case 'commercial':
+      pitchDelta = +6;
+      rateDelta = +8;
+      volumeDelta = +20;
+      break;
+    default:
+      break;
+  }
+
+  const finalPitch = pitchOffset + pitchDelta;
+  const finalRate = rateOffset + rateDelta;
+  const finalVolume = volumeOffset + volumeDelta;
+
+  const pitchStr = (finalPitch >= 0 ? `+${finalPitch}` : `${finalPitch}`) + '%';
+  const rateStr = (finalRate >= 0 ? `+${finalRate}` : `${finalRate}`) + '%';
+  const volumeStr = (finalVolume >= 0 ? `+${finalVolume}` : `${finalVolume}`) + '%';
+
+  return { voiceName, pitch: pitchStr, rate: rateStr, volume: volumeStr };
+}
+
+function formatEmotionalText(text: string, emotion: string): string {
+  let formatted = text.trim();
+  if (emotion === 'sad') {
+    // Replace harsh exclamation marks with quiet sorrowful pauses
+    formatted = formatted.replace(/!+/g, '...');
+    // Introduce delicate breathing pauses after clauses
+    formatted = formatted.replace(/،\s*/g, '، ... ');
+    formatted = formatted.replace(/,\s*/g, ', ... ');
+    if (!/[.!?؟…]$/.test(formatted)) {
+      formatted += '...';
+    }
+  } else if (emotion === 'angry') {
+    // Convert gentle ellipses to punchy exclamation marks
+    formatted = formatted.replace(/\.{2,}/g, '!');
+    formatted = formatted.replace(/…/g, '!');
+    if (!/[!؟?]$/.test(formatted)) {
+      formatted += '!';
+    }
+  } else if (emotion === 'happy') {
+    // Upbeat and energetic cadence
+    if (formatted.endsWith('.')) {
+      formatted = formatted.slice(0, -1) + '!';
+    }
+  } else if (emotion === 'commercial') {
+    formatted = formatted.replace(/\.{2,}/g, '.');
+  }
+  return formatted;
+}
+
 async function startServer() {
   const app = express();
   const server = http.createServer(app);
@@ -17,76 +125,92 @@ async function startServer() {
 
   app.use(express.json({ limit: '10mb' }));
 
-  // TTS API endpoint - generates human Persian & English speech
+  // Top-level process protection against unhandled crashes
+  process.on('uncaughtException', (err) => {
+    console.error('[SERVER PROTECTION] Uncaught exception prevented:', err);
+  });
+  process.on('unhandledRejection', (reason) => {
+    console.error('[SERVER PROTECTION] Unhandled rejection prevented:', reason);
+  });
+
+  // TTS API endpoint - generates human Persian & English speech with distinct emotional tones
   app.post('/api/tts', async (req, res) => {
+    let audioStreamRef: any = null;
+
+    // Handle client disconnect gracefully
+    req.on('close', () => {
+      if (audioStreamRef && typeof audioStreamRef.destroy === 'function') {
+        try {
+          audioStreamRef.destroy();
+        } catch (_) {}
+      }
+    });
+
     try {
-      const { text, character = 'female', emotion = 'happy', lang = 'fa' } = req.body;
+      const { text, character = 'female', emotion = 'happy', lang = 'fa', customMap } = req.body;
 
       if (!text || typeof text !== 'string' || !text.trim()) {
         return res.status(400).json({ error: 'Text is required' });
       }
 
-      // Voice selection
-      let voiceName = 'fa-IR-DilaraNeural';
-      if (lang === 'fa') {
-        if (character === 'male') {
-          voiceName = 'fa-IR-FaridNeural';
-        } else {
-          voiceName = 'fa-IR-DilaraNeural';
-        }
-      } else {
-        if (character === 'male') {
-          voiceName = 'en-US-GuyNeural';
-        } else if (character === 'child') {
-          voiceName = 'en-US-AnaNeural';
-        } else {
-          voiceName = 'en-US-JennyNeural';
-        }
-      }
+      const { voiceName, pitch, rate, volume } = computeEmotionalProsody(character, emotion, lang);
 
-      // Pitch and rate calculation based on persona & emotion
-      let rateStr = '+0%';
-      let pitchStr = '+0Hz';
-
-      if (character === 'child' && lang === 'fa') {
-        pitchStr = '+35Hz';
-        rateStr = '+5%';
-      }
-
-      if (emotion === 'happy') {
-        rateStr = rateStr === '+0%' ? '+6%' : rateStr;
-        pitchStr = pitchStr === '+0Hz' ? '+8Hz' : pitchStr;
-      } else if (emotion === 'sad') {
-        rateStr = '-14%';
-        pitchStr = '-8Hz';
-      } else if (emotion === 'angry') {
-        rateStr = '+15%';
-        pitchStr = '+12Hz';
-      } else if (emotion === 'commercial') {
-        rateStr = '+5%';
-        pitchStr = '+4Hz';
-      }
+      // Emotionally shaped punctuation & pacing
+      const emotionTunedText = formatEmotionalText(text, emotion);
 
       // Prepare enhanced text using Persian phonetic & mispronunciation dictionary
-      const { customMap } = req.body;
       const enhancedText = lang === 'fa' 
-        ? autoEnhancePersianPhonetics(text.trim(), customMap) 
-        : text.trim();
+        ? autoEnhancePersianPhonetics(emotionTunedText, customMap) 
+        : emotionTunedText;
 
       const tts = new MsEdgeTTS();
       await tts.setMetadata(voiceName, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
       const { audioStream } = await tts.toStream(enhancedText, {
-        pitch: pitchStr,
-        rate: rateStr,
+        pitch,
+        rate,
+        volume,
       });
 
+      audioStreamRef = audioStream;
+
+      // Safely buffer audio chunks with explicit error handling and timeout
+      const chunks: Buffer[] = [];
+      await new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          try {
+            audioStream.destroy();
+          } catch (_) {}
+          reject(new Error('TTS generation timed out'));
+        }, 30000);
+
+        audioStream.on('data', (chunk: Buffer) => {
+          chunks.push(chunk);
+        });
+
+        audioStream.once('end', () => {
+          clearTimeout(timeout);
+          resolve();
+        });
+
+        audioStream.once('error', (streamErr: any) => {
+          clearTimeout(timeout);
+          reject(streamErr);
+        });
+      });
+
+      if (chunks.length === 0) {
+        throw new Error('No audio data received from synthesis engine');
+      }
+
+      const audioBuffer = Buffer.concat(chunks);
       res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Length', audioBuffer.length);
       res.setHeader('Cache-Control', 'public, max-age=3600');
-      audioStream.pipe(res);
+      return res.end(audioBuffer);
     } catch (err: any) {
-      console.error('TTS generation error:', err);
+      console.error('TTS generation error caught safely:', err?.message || err);
       if (!res.headersSent) {
-        res.status(500).json({ error: err.message || 'TTS generation failed' });
+        res.status(500).json({ error: err?.message || 'TTS generation failed' });
       }
     }
   });
