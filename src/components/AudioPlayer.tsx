@@ -39,6 +39,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!audio) return;
 
     audio.src = record.audioUrl;
+    audio.playbackRate = 1.0;
+    setPlaybackRate(1.0);
     audio.load();
     setCurrentTime(0);
     setIsPlaying(false);
@@ -144,16 +146,34 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
 
       {/* Header with status badge */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
           <span className="text-xs sm:text-sm font-bold text-white">
             پلیر اختصاصی فایل صوتی تولید شده
           </span>
         </div>
-        <span className="text-[11px] font-semibold text-indigo-300 bg-indigo-950/80 px-2.5 py-0.5 rounded-full border border-indigo-500/40">
-          {record.voiceName} • {record.audioBlob?.type.includes('wav') ? 'WAV' : 'MP3'}
-        </span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {/* Emotion Badge */}
+          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+            record.emotion === 'happy'
+              ? 'bg-amber-950/80 text-amber-300 border-amber-500/40'
+              : record.emotion === 'sad'
+              ? 'bg-blue-950/80 text-blue-300 border-blue-500/40'
+              : record.emotion === 'angry'
+              ? 'bg-rose-950/80 text-rose-300 border-rose-500/40'
+              : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
+          }`}>
+            {record.emotion === 'happy' && '😄 لحن شاد'}
+            {record.emotion === 'sad' && '😢 لحن غمگین'}
+            {record.emotion === 'angry' && '😡 لحن خشمگین'}
+            {record.emotion === 'commercial' && '📢 لحن تبلیغاتی'}
+          </span>
+          {/* Voice and Format Badge */}
+          <span className="text-[11px] font-semibold text-indigo-300 bg-indigo-950/80 px-2.5 py-0.5 rounded-full border border-indigo-500/40">
+            {record.voiceName} • {record.audioBlob?.type.includes('wav') ? 'WAV' : 'MP3'}
+          </span>
+        </div>
       </div>
 
       {/* Text preview snippet */}

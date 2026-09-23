@@ -1,6 +1,6 @@
 {
-  "appId": "com.awastudio.tts",
-  "appName": "AwaStudio TTS Pro",
+  "appId": "com.avayeiranazad.tts",
+  "appName": "آوای ایران آزاد",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "server": {

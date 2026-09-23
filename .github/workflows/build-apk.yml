@@ -23,18 +23,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install Node Dependencies
-        run: npm ci || npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build Web Application
         run: npm run build
 
-      - name: Install Capacitor CLI & Android
+      - name: Install Capacitor & Prepare Android Platform
         run: |
-          npm install --save @capacitor/core @capacitor/cli @capacitor/android
-          npx cap sync android || (npx cap add android && npx cap sync android)
+          npm install --legacy-peer-deps --save @capacitor/core @capacitor/cli @capacitor/android
+          npx cap add android || true
+          if [ -d "android/app/src/main/res" ]; then
+            for dir in android/app/src/main/res/mipmap-*; do
+              cp public/app-logo.png "$dir/ic_launcher.png" || true
+              cp public/app-logo.png "$dir/ic_launcher_round.png" || true
+              cp public/app-logo.png "$dir/ic_launcher_foreground.png" || true
+            done
+          fi
+          npx cap sync android
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -53,6 +60,6 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AwaStudio-Debug-APK
+          name: AvayeIranAzad-Debug-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14

@@ -39,40 +39,40 @@ function computeEmotionalProsody(
 
   if (character === 'child') {
     if (lang === 'fa') {
-      pitchOffset = 42; // Transmute into an authentic sweet child voice
-      rateOffset = 8;
-      volumeOffset = 6;
+      pitchOffset = 46; // Transmute into an authentic sweet child voice
+      rateOffset = 12;
+      volumeOffset = 8;
     }
   } else if (character === 'male') {
-    pitchOffset = -5; // Richer baritone resonance
-    volumeOffset = 4;
+    pitchOffset = -7; // Richer baritone resonance
+    volumeOffset = 6;
   }
 
-  // Emotional modulation deltas (noticeable and expressive)
+  // Emotional modulation deltas (distinct, palpable, expressive)
   let pitchDelta = 0;
   let rateDelta = 0;
   let volumeDelta = 0;
 
   switch (emotion) {
     case 'happy':
-      pitchDelta = +18;
-      rateDelta = +16;
-      volumeDelta = +16;
+      pitchDelta = +26;
+      rateDelta = +22;
+      volumeDelta = +20;
       break;
     case 'sad':
-      pitchDelta = -18;
-      rateDelta = -26;
-      volumeDelta = -22;
+      pitchDelta = -26;
+      rateDelta = -34;
+      volumeDelta = -28;
       break;
     case 'angry':
-      pitchDelta = +16;
-      rateDelta = +22;
-      volumeDelta = +32;
+      pitchDelta = +22;
+      rateDelta = +26;
+      volumeDelta = +40;
       break;
     case 'commercial':
-      pitchDelta = +6;
-      rateDelta = +8;
-      volumeDelta = +20;
+      pitchDelta = +8;
+      rateDelta = +12;
+      volumeDelta = +25;
       break;
     default:
       break;

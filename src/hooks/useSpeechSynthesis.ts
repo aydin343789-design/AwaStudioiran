@@ -123,8 +123,8 @@ export function useSpeechSynthesis() {
         audioBlob = await synthesizeOfflineAudioTrack(
           phoneticallyEnhanced,
           durationSec,
-          character === 'child' ? 1.42 : character === 'male' ? 0.86 : 1.05,
-          emotion === 'angry' ? 1.22 : emotion === 'sad' ? 0.74 : emotion === 'happy' ? 1.16 : 1.08,
+          character === 'child' ? 1.55 : character === 'male' ? 0.82 : 1.05,
+          emotion === 'angry' ? 1.35 : emotion === 'sad' ? 0.62 : emotion === 'happy' ? 1.25 : 1.1,
           lang,
           character,
           emotion

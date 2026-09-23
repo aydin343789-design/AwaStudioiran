@@ -1,28 +1,29 @@
 # راهنمای جامع دریافت فایل نصبی اندروید (APK) و استقرار
 # Comprehensive Android APK Build & Deployment Guide
 
-اپلیکیشن **آوا استودیو TTS Pro** یک برنامه موبایلی پیشرفته با معماری PWA و Capacitor است که به شما امکان تبدیل متن فارسی و انگلیسی به صوت، اعراب‌گذاری هوشمند، تنظیم سرعت و لحن، خروجی WAV و اجرای آفلاین را می‌دهد.
+اپلیکیشن **آوای ایران آزاد** یک برنامه موبایلی و وب پیشرفته با معماری PWA و Capacitor است که به شما امکان تبدیل متن فارسی و انگلیسی به صوت با لحن‌های احساسی متنوع، تلفظ دقیق، خروجی MP3/WAV و آیکون اختصاصی برج آزادی روی پکیج APK اندروید را می‌دهد.
 
 ---
 
 ## 🚀 روش اول: ساخت خودکار فایل APK در GitHub Actions (بدون نیاز به نصب نرم‌افزار)
 
-این پروژه از قبل دارای فایل اکشن گیت‌هاب در مسیر `.github/workflows/build-apk.yml` است. با مراحل زیر فایل APK به صورت خودکار برای شما کامپایل می‌شود:
+این پروژه دارای فایل اصلاح‌شده و بهینه‌سازی‌شده اکشن گیت‌هاب در مسیر `.github/workflows/build-apk.yml` است.
+> 💡 **رفع خطای قبلی:** خطای نبود فایل قفل پکیج (`Dependencies lock file is not found`) در اکشن گیت‌هاب کاملاً برطرف شد و آیکون رسمی برنامه (برج آزادی) نیز به صورت خودکار روی پکیج نصبی APK ست می‌شود.
 
 ### مراحل:
-1. در حساب [GitHub.com](https://github.com) خود وارد شوید و یک مخزن (Repository) جدید ایجاد کنید (مثلاً `awastudio-tts`).
-2. کدهای این پروژه را در ترمینال سیستم خود کامیت و پوش کنید:
+1. در حساب [GitHub.com](https://github.com) خود یک مخزن (Repository) جدید با نام دلخواه (مثلاً `avaye-iran-azad`) ایجاد کنید.
+2. کدهای این پروژه را به همراه فایل `package-lock.json` کامیت و پوش کنید:
 ```bash
 git init
 git add .
-git commit -m "Initial release of AwaStudio TTS Pro"
+git commit -m "Release of Avaye Iran Azad with APK build and icon"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/awastudio-tts.git
+git remote add origin https://github.com/YOUR_USERNAME/avaye-iran-azad.git
 git push -u origin main
 ```
-3. پس از اجرای دستور `git push`، به صفحه ریپازیتوری خود در وب‌سایت گیت‌هاب بروید و روی تب **Actions** کلیک کنید.
-4. کار (Workflow) با عنوان **Build Android APK** به صورت خودکار آغاز می‌شود.
-5. پس از حدود ۳ الی ۵ دقیقه و ظاهر شدن تیک سبز، روی اجرا کلیک کنید و از بخش **Artifacts** در پایین صفحه، فایل زیپ حاوی **`app-debug.apk`** را مستقیماً دانلود و روی گوشی‌های اندروید نصب کنید!
+3. پس از اجرای دستور `git push`، به صفحه مخزن خود در GitHub بروید و روی تب **Actions** بزنید.
+4. کار با عنوان **Build Android APK** بدون خطا اجرا می‌شود.
+5. پس از ظاهر شدن تیک سبز، روی اجرا کلیک کرده و از بخش پایین صفحه در قسمت **Artifacts**، فایل **`AvayeIranAzad-Debug-APK`** را دانلود و روی گوشی خود نصب کنید. (لوگوی زیبای برنامه با برج آزادی بر روی آیکون نصب برنامه قرار دارد).
 
 ---
 

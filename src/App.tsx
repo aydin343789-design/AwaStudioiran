@@ -23,8 +23,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
-const INITIAL_TEXT = `سلام و درود! به استودیوی هوشمند تبدیل متن به صدا خوش آمدید.
-شما می‌توانید شخصیت و لحن مورد نظر خود را انتخاب کنید و با فشردن دکمه تبدیل، فایل صوتی را در پلیر زیر بشنوید و پس از تایید دانلود نمایید.`;
+const INITIAL_TEXT = `سلام و درود! به استودیوی صوتی «آوای ایران آزاد» خوش آمدید.
+شما می‌توانید شخصیت و لحن احساسی مورد نظر خود را انتخاب کنید و با زدن دکمه تبدیل، فایل صوتی را در پلیر زیر بشنوید و با کیفیت بالا ذخیره نمایید.`;
 
 export default function App() {
   const [text, setText] = useState<string>(INITIAL_TEXT);
@@ -186,19 +186,44 @@ export default function App() {
 
         {/* 3. Primary Convert Button */}
         <div className="flex flex-col gap-2 pt-1">
+          {currentAudioRecord && (currentAudioRecord.emotion !== emotion || currentAudioRecord.character !== character) && (
+            <div className="flex items-center justify-center gap-1.5 py-1 px-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs text-center animate-pulse">
+              <span>لحن یا شخصیت تغییر کرد؛ روی دکمه زیر بزنید تا صدا با لحن جدید اجرا شود:</span>
+            </div>
+          )}
           <button
             type="button"
             onClick={handleConvert}
             disabled={!text.trim() || state === 'loading'}
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] text-white font-bold text-base shadow-xl shadow-indigo-600/30 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+            className={`w-full py-4 px-6 rounded-2xl text-white font-bold text-base shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 active:scale-[0.98] ${
+              currentAudioRecord && (currentAudioRecord.emotion !== emotion || currentAudioRecord.character !== character)
+                ? 'bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 shadow-amber-600/30 ring-2 ring-amber-400/50'
+                : 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-indigo-600/30'
+            }`}
           >
             <Sparkles className="w-5 h-5 text-amber-300" />
             <span>
               {state === 'loading'
-                ? 'در حال پردازش و تبدیل صدا...'
+                ? 'در حال پردازش و تغییر لحن صدا...'
                 : currentAudioRecord
-                ? 'تبدیل مجدد متن به صدا'
-                : 'تبدیل به صدا'}
+                ? `تبدیل مجدد با لحن: ${
+                    emotion === 'happy'
+                      ? 'شاد و صمیمی 😄'
+                      : emotion === 'sad'
+                      ? 'غمگین و محزون 😢'
+                      : emotion === 'angry'
+                      ? 'خشمگین و عصبانی 😡'
+                      : 'تبلیغاتی و رسا 📢'
+                  }`
+                : `تبدیل به صدا با لحن: ${
+                    emotion === 'happy'
+                      ? 'شاد 😄'
+                      : emotion === 'sad'
+                      ? 'غمگین 😢'
+                      : emotion === 'angry'
+                      ? 'خشمگین 😡'
+                      : 'تبلیغاتی 📢'
+                  }`}
             </span>
           </button>
         </div>

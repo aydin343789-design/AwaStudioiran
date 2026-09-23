@@ -11,16 +11,19 @@ export const Navbar: React.FC = () => {
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
         {/* Logo & Brand */}
         <div className="flex items-center gap-2.5">
-          <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-cyan-400 p-0.5 shadow-md shadow-indigo-500/20 flex items-center justify-center">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <span className="text-xs font-black bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">
-                آوا
-              </span>
-            </div>
+          <div className="relative w-9 h-9 rounded-xl overflow-hidden border border-emerald-500/40 shadow-md shadow-emerald-500/10 flex items-center justify-center shrink-0">
+            <img
+              src="/app-logo.png"
+              alt="لوگوی آوای ایران آزاد"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-sm sm:text-base font-black tracking-tight text-white">
-              استودیو تبدیل متن به صدا
+            <h1 className="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-1.5">
+              <span>آوای ایران آزاد</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-gradient-to-r from-emerald-500/20 to-red-500/20 border border-emerald-500/30 text-emerald-300 font-normal">
+                استودیو صوتی
+              </span>
             </h1>
           </div>
         </div>

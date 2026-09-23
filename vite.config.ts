@@ -37,9 +37,9 @@ export default defineConfig(() => {
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
         manifest: {
           id: '/',
-          name: 'AwaStudio TTS Pro - تبدیل متن به صدا',
-          short_name: 'AwaStudio',
-          description: 'اپلیکیشن قدرتمند تبدیل متن به گفتار فارسی و انگلیسی با تنظیم لحن، سرعت، خروجی صوتی و قابلیت آفلاین',
+          name: 'آوای ایران آزاد - تبدیل متن به صدا',
+          short_name: 'ایران آزاد',
+          description: 'اپلیکیشن قدرتمند تبدیل متن به گفتار با لحن‌های حسی و طبیعی، زبان فارسی و انگلیسی',
           theme_color: '#0f172a',
           background_color: '#020617',
           display: 'standalone',

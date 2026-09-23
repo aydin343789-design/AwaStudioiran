@@ -129,10 +129,10 @@ npx cap open android
                 <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold text-emerald-200 text-sm mb-1">
-                    ساخت خودکار APK در سرورهای ابری گیت‌هاب (CI/CD)
+                    ساخت خودکار APK با لوگوی برج آزادی در سرورهای ابری گیت‌هاب
                   </h4>
                   <p className="text-xs text-emerald-300/80 leading-relaxed">
-                    فایل ورک‌فلو <code className="bg-emerald-900/60 px-1 py-0.5 rounded text-white font-mono">.github/workflows/build-apk.yml</code> به صورت آماده در پروژه تعبیه شده است. کافیست پروژه را در GitHub پوش (Push) کنید تا ربات‌های گیت‌هاب فایل <strong className="text-white">app-debug.apk</strong> را کامپایل کرده و به عنوان آرتیفکت آماده دانلود تحویل دهند.
+                    فایل ورک‌فلو <code className="bg-emerald-900/60 px-1 py-0.5 rounded text-white font-mono">.github/workflows/build-apk.yml</code> بازنویسی و خطای قفل فایل (<span className="text-amber-300">Dependencies lock file</span>) به طور کامل رفع شد. همچنین آیکون برج آزادی به عنوان آیکون لانچر پکیج APK قرار گرفت.
                   </p>
                 </div>
               </div>
@@ -176,7 +176,7 @@ npx cap open android
                     فرآیند ساخت <span className="font-mono text-emerald-400">Build Android APK</span> آغاز می‌شود (حدود ۳ تا ۴ دقیقه طول می‌کشد).
                   </li>
                   <li>
-                    پس از تیک سبز، روی اجرا کلیک کنید و در بخش <strong className="text-white">Artifacts</strong> فایل <span className="font-mono text-white underline">AwaStudio-Debug-APK.zip</span> را دانلود کرده و روی هر گوشی اندروید نصب کنید!
+                    پس از تیک سبز، روی اجرا کلیک کنید و در بخش <strong className="text-white">Artifacts</strong> فایل <span className="font-mono text-emerald-300 font-bold underline">AvayeIranAzad-Debug-APK.zip</span> را دانلود کرده و روی هر گوشی اندروید نصب کنید!
                   </li>
                 </ol>
               </div>
